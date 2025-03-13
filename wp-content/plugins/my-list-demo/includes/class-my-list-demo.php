@@ -116,9 +116,56 @@ class My_List_Demo {
      * Render admin page
      */
     public function render_admin_page() {
+        // Check user capabilities
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $items = get_option('mylistdemo_items', array());
         ?>
-        <div class="wrap">
+        <div class="wrap mylistdemo-admin">
             <h1><?php echo esc_html__('My List Demo Settings', 'my-list-demo'); ?></h1>
+
+            <div class="mylistdemo-container">
+                <div class="mylistdemo-form">
+                    <h2><?php echo esc_html('Add New Item', 'my-list-demo'); ?></h2>
+                    <div class="mylistdemo-add-item">
+                        <input type="text" id="mylistdemo-new-item" placeholder="<?php echo esc_attr__('Enter item text...', 'my-list-demo'); ?>">
+                        <button id="mylistdemo-add-item" class="button button-primary"><?php echo esc_html__('Add Item', 'my-list-demo'); ?></button>
+                    </div>
+
+                    <div class="mylistdemo-actions">
+                        <button id="mylistdemo-save-items" class="button button-primary"><?php echo esc_html__('Save Changes', 'my-list-demo'); ?></button>
+                        <button id="mylistdemo-reset-items" class="button button-secondary"><?php echo esc_html__('Reset List', 'my-list-demo'); ?></button>
+                    </div>
+
+                    <div id="mylistdemo-message" class="mylistdemo-message"></div>
+                </div>
+
+                <div class="mylistdemo-items-container">
+                    <h2><?php echo esc_html__('Manage Items', 'my-list-demo'); ?></h2>
+                    <p><?php echo esc_html__('Drag and drop to reorder items. Click the "x" to remove an item.', 'my-list-demo'); ?></p>
+
+                    <ul id="mylistdemo-items" class="mylistdemo-items">
+                        <?php if (!empty($items)) : ?>
+                            <?php foreach ($items as $item) : ?>
+                                <li class="mylistdemo-item">
+                                    <span class="mylistdemo-item-text"><?php echo esc_html($item); ?></span>
+                                    <span class="mylistdemo-item-delete dashicons dashicons-no-alt"></span>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li class="mylistdemo-no-items"><?php echo esc_html__('No items added yet.', 'my-list-demo'); ?></li>
+                        <?php endif; ?>
+                    </ul>
+                    
+                    <div class="mylistdemo-shortcode-info">
+                        <h3><?php echo esc_html__('Shortcode', 'my-list-demo'); ?></h3>
+                        <p><?php echo esc_html__('Use this shortcode to display your list on any page or post:', 'my-list-demo'); ?></p>
+                        <code>[mylistdemo]</code>
+                    </div>
+                </div>
+            </div>
         </div>
         <?php
     }
@@ -152,7 +199,7 @@ class My_List_Demo {
      * AJAX callback to reset items
      */
     public function ajax_reset_items() {
-        
+
     }
 
 
