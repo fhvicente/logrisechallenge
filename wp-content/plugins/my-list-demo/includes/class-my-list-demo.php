@@ -106,7 +106,7 @@ class My_List_Demo {
     public function enqueue_frontend_assets() {
         wp_enqueue_style(
             'mylistdemo-frontend-css',
-            MYLISTDEMO_PLUGIN_DIR . 'assets/css/frontend.css',
+            MYLISTDEMO_PLUGIN_URL . 'assets/css/frontend.css',
             array(),
             MYLISTDEMO_VERSION
         );
@@ -199,7 +199,26 @@ class My_List_Demo {
      * AJAX callback to reset items
      */
     public function ajax_reset_items() {
+        // Check nonce for security
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mylistdemo-admin-nonce')) {
+            wp_send_json_error(array('message' => __('Security check failed', 'my-list-demo')));
+            wp_die();
+        }
 
+        // Check user capabilities
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => __('Permission denied', 'my-list-demo')));
+            wp_die();
+        }
+
+        // Reset items to empty array
+        update_option('mylistdemo_items', array());
+
+        // Clear transient cache
+        delete_transient('mylistdemo_cached_items');
+        
+        wp_send_json_success(array('message' => __('List reset successfully', 'my-list-demo')));
+        wp_die();
     }
 
 
