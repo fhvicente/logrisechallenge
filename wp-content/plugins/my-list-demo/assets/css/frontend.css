@@ -1,0 +1,46 @@
+/* Frontend Styles */
+.mylistdemo-list-container {
+    margin: 20px 0;
+}
+
+.mylistdemo-list {
+    list-style: none;
+    padding: 15px;
+    margin: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mylistdemo-list-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #ffffff;
+    transition: background-color 0.2s ease;
+}
+
+.mylistdemo-list-item:last-child {
+    border-bottom: none;
+}
+
+.mylistdemo-list-item:hover {
+    background-color: #f8f9fa;
+}
+
+.mylistdemo-list-item:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+.mylistdemo-list-item:nth-child(odd):hover {
+    background-color: #e9ecef;
+}
+
+.mylistdemo-empty {
+    padding: 20px;
+    text-align: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    color: #6c757d;
+    font-style: italic;
+}
