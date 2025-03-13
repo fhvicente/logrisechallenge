@@ -22,6 +22,9 @@ class My_List_Demo {
         
         // Register shortcode
         add_shortcode('mylistdemo', array($this, 'render_shortcode'));
+
+        // AJAX
+        add_action('wp_ajax_mylistdemo_save_items', array($this, 'ajax_save_items'));
     }
 
     /**
@@ -93,5 +96,22 @@ class My_List_Demo {
         </ul>
         <?php
         return ob_get_clean();
+    }
+
+    /**
+     * AJAX callback to save items
+     */
+    public function ajax_save_items() {
+        if(isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mylistdemo-admin-once')) {
+            wp_send_json_error(array('message' => __('Security check failed', 'my-list-demo')));
+            wp_die();
+        }
+
+        $items = isset($_POST['items']) ? $_POST['items'] : array();
+
+        update_option('mylistdemo_items', $items);
+
+        wp_send_json_success(array('message' => __('Items saved sucessfully', 'my-list-demo')));
+        wp_die();
     }
  }
