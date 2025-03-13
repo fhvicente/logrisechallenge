@@ -11,8 +11,8 @@ class My_List_Demo {
 
     public function run() {
         // Register activation and deactivation hooks
-        register_activation_hook(plugin_dir_path(__DIR__) . 'my-list-demo.php', array($this, 'activate'));
-        register_deactivation_hook(plugin_dir_path(__DIR__) . 'my-list-demo.php', array($this, 'deactivation'));
+        register_activation_hook((__DIR__) . 'my-list-demo.php', array($this, 'activate'));
+        register_deactivation_hook((__DIR__) . 'my-list-demo.php', array($this, 'deactivation'));
 
         add_action('admin-menu', array($this, 'add_admin_menu'));
 
@@ -20,6 +20,25 @@ class My_List_Demo {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_assets'));
         
+        // Register shortcode
+        add_shortcode('mylistdemo', array($this, 'render_shortcode'));
+    }
+
+    /**
+     * Plugin activation
+     */
+    public function activate() {
+        // Set defalut option
+        if (!get_option('mylistdemo_items')) {
+            update_option('mylistdemo_items', array());
+        }
+    }
+
+    /**
+     * Plugin deactivation
+     */
+    public function deactivation() {
+        delete_transient('mylistdemo_cached_items');
     }
 
     /**
@@ -46,5 +65,19 @@ class My_List_Demo {
             <h1><?php echo esc_html__('My List Demo Settings', 'my-list-demo'); ?></h1>
         </div>
         <?php
+    }
+
+    /**
+     * Equeue admin assets
+     */
+    public function enqueue_admin_assets($hoot) {
+
+    }
+
+    /**
+     * Render shortcode
+     */
+    public function render_shortcode($atts) {
+        return ob_get_clean();
     }
  }
