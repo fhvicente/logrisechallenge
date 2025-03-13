@@ -101,6 +101,41 @@
             });
         }
 
+        // Helper function to reset items
+        function resetItems() {
+            $.ajax({
+                url: myListDemoAdmin.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'mylistdemo_reset_items',
+                    nonce: myListDemoAdmin.nonce
+                },
+                beforeSend: function() {
+                    showMessage('Resetting...', 'info');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#mylistdemo-items').empty().append('<li class="mylistdemo-no-items">No items added yet.</li>');
+                        showMessage(response.data.message, 'success');
+                    } else {
+                        showMessage(response.data.message, 'error');
+                    }
+                },
+                error: function() {
+                    showMessage('An error occurred while resetting.', 'error');
+                }
+            });
+        }
+
+        // Helper function to update "no items" message
+        function updateNoItemsMessage() {
+            if ($('#mylistdemo-items .mylistdemo-item').length === 0) {
+                $('#mylistdemo-items').append('<li class="mylistdemo-no-items">No items added yet.</li>');
+            } else {
+                $('.mylistdemo-no-items').remove();
+            }
+        }
+
         // Helper function to show messages
         function showMessage(message, type) {
             const messageElement = $('#mylistdemo-message');
