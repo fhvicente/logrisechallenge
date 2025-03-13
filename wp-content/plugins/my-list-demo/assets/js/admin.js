@@ -2,7 +2,13 @@
     'use-strict';
 
     $(document).ready(function() {
-        console.log('My List Demo script loaded!');
+        // Make the list sortable
+        $('#mylistdemo-items').sortable({
+            placeholder: 'mylistdemo-item-placeholder',
+            update: function() {
+                updateNoItemsMessage();
+            }
+        });
     });
     
-})(JQuery);
+})(jQuery);
