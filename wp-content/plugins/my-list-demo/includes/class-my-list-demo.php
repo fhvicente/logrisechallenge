@@ -78,6 +78,20 @@ class My_List_Demo {
      * Render shortcode
      */
     public function render_shortcode($atts) {
+        $items = get_option('mylistdemo_items', array());
+
+        if (empty($items)) {
+            return '<div class="mylistdemo-empty">' . __('No items to display.', 'my-list-demo') . '</div>';
+        }
+
+        ob_start();
+        ?>
+        <ul class="mylistdemo-list">
+            <?php foreach ($items as $item) : ?>
+                <li><?php echo esc_html($item); ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <?php
         return ob_get_clean();
     }
  }
