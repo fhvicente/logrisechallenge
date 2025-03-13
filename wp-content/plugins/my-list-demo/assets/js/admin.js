@@ -67,6 +67,58 @@
             showMessage('Item added. Don\'t forget to save your changes!', 'success');
         }
 
+        // Helper function to save items
+        function saveItems() {
+            const items = [];
+            
+            // Get all items
+            $('#mylistdemo-items .mylistdemo-item-text').each(function() {
+                items.push($(this).text());
+            });
+
+            // Send AJAX request
+            $.ajax({
+                url: myListDemoAdmin.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'mylistdemo_save_items',
+                    nonce: myListDemoAdmin.nonce,
+                    items: items
+                },
+                beforeSend: function() {
+                    showMessage('Saving...', 'info');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        showMessage(response.data.message, 'success');
+                    } else {
+                        showMessage(response.data.message, 'error');
+                    }
+                },
+                error: function() {
+                    showMessage('An error occurred while saving.', 'error');
+                }
+            });
+        }
+
+        // Helper function to show messages
+        function showMessage(message, type) {
+            const messageElement = $('#mylistdemo-message');
+            messageElement.html(message);
+
+            // Remove all classes and add the appropriate one
+            messageElement.removeClass('success error info');
+            messageElement.addClass(type);
+
+            // Show the message
+            messageElement.fadeIn();
+
+            // Hide the message after 3 seconds
+            setTimeout(function() {
+                messageElement.fadeOut();                
+            }, 3000);
+        }
+
         // Helper funciton to scape HTML
         function escapeHtml(text) {
             return text
