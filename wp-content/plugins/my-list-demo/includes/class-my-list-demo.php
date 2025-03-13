@@ -32,7 +32,7 @@ class My_List_Demo {
     /**
      * Plugin activation
      */
-    public function activate() {
+    public static function activate() {
         // Set default option
         if (!get_option('mylistdemo_items')) {
             update_option('mylistdemo_items', array());
@@ -42,7 +42,7 @@ class My_List_Demo {
     /**
      * Plugin deactivation
      */
-    public function deactivation() {
+    public static function deactivation() {
         delete_transient('mylistdemo_cached_items');
     }
 
@@ -75,7 +75,7 @@ class My_List_Demo {
         // Enqueue admin script
         wp_enqueue_script(
             'mylistdemo-admin-js',
-            MYLISTDEMO_PLUGIN_DIR . 'assets/js/admin.js',
+            MYLISTDEMO_PLUGIN_URL . 'assets/js/admin.js',
             array('jquery', 'jquery-ui-sortable'),
             MYLISTDEMO_VERSION,
             true
@@ -94,7 +94,7 @@ class My_List_Demo {
         // Enqueue admin styles
         wp_enqueue_style(
             'mylistdemo-admin-css',
-            MYLISTDEMO_PLUGIN_DIR . 'assets/css/admin.css',
+            MYLISTDEMO_PLUGIN_URL . 'assets/css/admin.css',
             array(),
             MYLISTDEMO_VERSION
         );
@@ -174,7 +174,7 @@ class My_List_Demo {
      * AJAX callback to save items
      */
     public function ajax_save_items() {
-        if(isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mylistdemo-admin-nonce')) {
+        if(!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mylistdemo-admin-nonce')) {
             wp_send_json_error(array('message' => __('Security check failed', 'my-list-demo')));
             wp_die();
         }

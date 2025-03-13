@@ -23,10 +23,14 @@ define('MYLISTDEMO_PLUGIN_URL', plugin_dir_url(__FILE__));
 // Include the main plugin class
 require_once MYLISTDEMO_PLUGIN_DIR . 'includes/class-my-list-demo.php';
 
+// Register activation and deactivation hooks
+register_activation_hook(__FILE__, array('My_List_Demo', 'activate'));
+register_deactivation_hook(__FILE__, array('My_List_Demo', 'deactivation'));
+
 // Initialize the plugin
 function run_my_list_demo() {
     $plugin = new My_List_Demo();
     $plugin->run();
 }
 
-run_my_list_demo();
+add_action('plugins_loaded', 'run_my_list_demo');
