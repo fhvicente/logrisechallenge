@@ -27,6 +27,9 @@ class My_List_Demo {
         // AJAX handlers
         add_action('wp_ajax_mylistdemo_save_items', array($this, 'ajax_save_items'));
         add_action('wp_ajax_mylistdemo_reset_items', array($this, 'ajax_reset_items'));
+
+        // Elementor widget (if Elementor is active)
+        add_action('elementor/init', array($this, 'init_elementor_widget'));
     }
 
     /**
@@ -256,4 +259,24 @@ class My_List_Demo {
         return ob_get_clean();
     }
 
+    /**
+     * Initialize Elementor widget
+     */
+    public function init_elementor_widget() {
+        // Check if Elementor is installed and activated
+        if (did_action('elementor/loaded')) {
+            // Include the custom widget file
+            require_once MYLISTDEMO_PLUGIN_DIR . 'includes/class-my-list-demo-widget.php';
+
+            // register the widget
+            add_action('elementor/widgets/register', array($this, 'register_elementor_widget'));
+        }
+    }
+
+    /**
+     * Register Elementor widget
+     */
+    public function register_elementor_widget($widgets_manager) {
+        $widgets_manager->register(new My_List_Demo_Widget());
+    }
 }
