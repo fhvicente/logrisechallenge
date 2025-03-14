@@ -226,20 +226,33 @@ class My_List_Demo {
      * Render shortcode
      */
     public function render_shortcode($atts) {
+        // Get cached items
         $items = get_option('mylistdemo_items', array());
-
-        if (empty($items)) {
+        
+        // If no cached items, get from options and cache them
+        if (false === $items) {
+            $items = get_option('mylistdemo_items', array());
+            set_transient('mylistdemo_cached_items', $items, HOUR_IN_SECONDS); // Cache for 1 hour
+        }
+        
+        // If no items, return a message
+        IF (empty($items)) {
             return '<div class="mylistdemo-empty">' . __('No items to display.', 'my-list-demo') . '</div>';
         }
-
+        
+        // Start output buffering
         ob_start();
         ?>
-        <ul class="mylistdemo-list">
-            <?php foreach ($items as $item) : ?>
-                <li><?php echo esc_html($item); ?></li>
-            <?php endforeach; ?>
-        </ul>
+        <div class="mylistdemo-list-container">
+            <ul class="mylistdemo-list">
+                <?php foreach ($items as $item) : ?>
+                    <li class="mylistdemo-list-item"><?php echo esc_html($item); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
         <?php
+
+        // Return buffered content
         return ob_get_clean();
     }
 
